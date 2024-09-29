@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <input type="file" id="imageInput" accept="image/*">
+    <img id="previewImage" src="" style="display:none;">
+
+    <script>
+        document.getElementById('imageInput').addEventListener('change', function (event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const img = document.createElement('img');
+    const reader = new FileReader();
+
+    // Cuando se carga la imagen
+    reader.onload = function (e) {
+        img.src = e.target.result;
+
+        img.onload = function () {
+            // Establecer las dimensiones máximas (por ejemplo, 500x500 píxeles)
+            const MAX_WIDTH = 500;
+            const MAX_HEIGHT = 500;
+
+            let width = img.width;
+            let height = img.height;
+
+            // Calcular nuevas dimensiones manteniendo la relación de aspecto
+            if (width > height) {
+                if (width > MAX_WIDTH) {
+                    height *= MAX_WIDTH / width;
+                    width = MAX_WIDTH;
+                }
+            } else {
+                if (height > MAX_HEIGHT) {
+                    width *= MAX_HEIGHT / height;
+                    height = MAX_HEIGHT;
+                }
+            }
+
+            // Crear un canvas para redimensionar la imagen
+            const canvas = document.createElement('canvas');
+            canvas.width = width;
+            canvas.height = height;
+
+            // Dibujar la imagen en el canvas redimensionado
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, width, height);
+
+            // Convertir el canvas a base64 con calidad reducida (por ejemplo, 0.7)
+            const base64Image = canvas.toDataURL('image/jpeg', 0.7); // El formato también puede ser 'image/webp'
+
+            console.log(base64Image);  // Aquí tienes la imagen reducida en base64
+
+            // Mostrar la imagen resultante en la página (opcional)
+            document.getElementById('previewImage').src = base64Image;
+            document.getElementById('previewImage').style.display = 'block';
+        };
+    };
+
+    // Leer la imagen como una URL de datos base64
+    reader.readAsDataURL(file);
+});
+
+    </script>
+
+</body>
+
+</html>
