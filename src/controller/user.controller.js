@@ -104,8 +104,6 @@ async function getUserById(req, res) {
 async function getAllUser(req, res) {
     const users = await getAllUsersModel();
 
-    console.log(users);
-
     res.status(200).json({
         sucess: true,
         data: users,

@@ -57,9 +57,6 @@ async function loginUser(req, res) {
 
     const token = generatedToken(userAuthenticate);
 
-    console.log(token);
-
-
     res.status(200).json({
         success: true,
         message: "Usuario autorizado",

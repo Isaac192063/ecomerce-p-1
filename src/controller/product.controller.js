@@ -13,8 +13,6 @@ async function newProduct(req, res) {
     try {
         let { name, price, image, description, id_cty } = req.body;
 
-        console.log("Entro?");
-
         const categoryExist = await getCategoryByIdModel(id_cty);
 
         if (!categoryExist) {
@@ -23,18 +21,13 @@ async function newProduct(req, res) {
                 message: "categoria no encontrada",
             });
         }
-        console.log("Entro?");
 
         if (image?.trim()) {
             console.log("creando imagen");
             image = saveImage(image, "product");
         }
-        console.log("Entro?");
-        console.log({ name, price, image, description, id_cty });
 
         const data = await saveProductModel(name, price, image, description, id_cty);
-
-        console.log(data);
 
         res.status(201).json({
             success: true,
@@ -132,8 +125,6 @@ async function getAllProduct(req, res) {
     const { count } = await countProductModel();
 
     const totalPages = Math.ceil(count / limit);
-
-    console.log(req.query);
 
     res.status(200).json({
         success: true,
