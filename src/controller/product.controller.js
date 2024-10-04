@@ -80,61 +80,82 @@ async function updateProduct(req, res) {
 }
 
 async function deleteProduct(req, res) {
-    const { idProduct } = req.params;
+    try {
+        const { idProduct } = req.params;
 
-    const data = await getProductByIdModel(idProduct);
+        const data = await getProductByIdModel(idProduct);
 
-    if (!data) {
-        return res.status(404).json({
+        if (!data) {
+            return res.status(404).json({
+                success: false,
+                message: "Producto no encontrado",
+            });
+        }
+
+        const productDelete = await deleteProductModel(idProduct);
+
+        return res.status(200).json({
+            success: true,
+            data: productDelete,
+        });
+    } catch (error) {
+        res.status(500).json({
             success: false,
-            message: "Producto no encontrado",
+            message: "Error en el servidor",
         });
     }
-
-    const productDelete = await deleteProductModel(idProduct);
-
-    return res.status(200).json({
-        success: true,
-        data: productDelete,
-    });
 }
 
 async function getProductById(req, res) {
-    const { idProduct } = req.params;
+    try {
+        const { idProduct } = req.params;
 
-    const data = await getProductByIdModel(idProduct);
+        const data = await getProductByIdModel(idProduct);
 
-    if (!data) {
-        return res.status(404).json({
+        if (!data) {
+            return res.status(404).json({
+                success: false,
+                message: "Producto no encontrado",
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            data,
+        });
+    } catch (error) {
+        res.status(500).json({
             success: false,
-            message: "Producto no encontrado",
+            message: "Error en el servidor",
         });
     }
-
-    res.status(200).json({
-        success: true,
-        data,
-    });
 }
 
 async function getAllProduct(req, res) {
-    const { page = 1, limit = 10 } = req.query;
+    try {
+        const { page = 1, limit = 10 } = req.query;
 
-    const offset = (page - 1) * limit;
-    const data = await getAllProductModel(limit, offset);
-    const { count } = await countProductModel();
+        const offset = (page - 1) * limit;
+        const data = await getAllProductModel(limit, offset);
+        const { count } = await countProductModel();
 
-    const totalPages = Math.ceil(count / limit);
+        const totalPages = Math.ceil(count / limit);
 
-    res.status(200).json({
-        success: true,
-        data: {
-            totalProducts: Number(count),
-            totalPages: totalPages,
-            currentPage: Number(page),
-            products: data,
-        },
-    });
+        res.status(200).json({
+            success: true,
+            data: {
+                totalProducts: Number(count),
+                totalPages: totalPages,
+                currentPage: Number(page),
+                products: data,
+            },
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "Error en el servidor",
+        });
+    }
 }
 
 export default {

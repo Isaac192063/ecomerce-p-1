@@ -63,51 +63,72 @@ async function updateUser(req, res) {
 }
 
 async function deleteUser(req, res) {
-    const { idUser } = req.params;
+    try {
+        const { idUser } = req.params;
 
-    const userModel = await getUserByIdModel(idUser);
+        const userModel = await getUserByIdModel(idUser);
 
-    if (!userModel) {
-        return res.status(404).json({
+        if (!userModel) {
+            return res.status(404).json({
+                success: false,
+                message: "usuario no encontrado",
+            });
+        }
+
+        const userDelete = await deleteUserModel(idUser);
+        deleteImage(userModel.image);
+
+        return res.status(200).json({
+            success: true,
+            data: userDelete,
+        });
+    } catch (error) {
+        res.status(500).json({
             success: false,
-            message: "usuario no encontrado",
+            message: "Error en el servidor",
         });
     }
-
-    const userDelete = await deleteUserModel(idUser);
-    deleteImage(userModel.image);
-
-    return res.status(200).json({
-        success: true,
-        data: userDelete,
-    });
 }
 
 async function getUserById(req, res) {
-    const { idUser } = req.params;
+    try {
+        const { idUser } = req.params;
 
-    const user = await getUserByIdModel(idUser);
+        const user = await getUserByIdModel(idUser);
 
-    if (!user) {
-        return res.status(404).json({
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: "no se encontro el usuario",
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            data: user,
+        });
+    } catch (error) {
+        res.status(500).json({
             success: false,
-            message: "no se encontro el usuario",
+            message: "Error en el servidor",
         });
     }
-
-    res.status(200).json({
-        success: true,
-        data: user,
-    });
 }
 
 async function getAllUser(req, res) {
-    const users = await getAllUsersModel();
+    try {
+        const users = await getAllUsersModel();
 
-    res.status(200).json({
-        sucess: true,
-        data: users,
-    });
+        res.status(200).json({
+            sucess: true,
+            data: users,
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "Error en el servidor",
+        });
+    }
 }
 
 export default {
