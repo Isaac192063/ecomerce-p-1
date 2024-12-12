@@ -3,6 +3,7 @@ import express from "express";
 import logger from "morgan";
 import indexRouter from "../routes/index.routes.js";
 import PgConection from "../service/PgConection.service.js";
+import cors from 'cors';
 
 export default class Server {
     constructor() {
@@ -12,9 +13,10 @@ export default class Server {
     }
 
     middlewares() {
-        this.app.use(express.json());
-        this.app.use(express.urlencoded({ extended: true }));
+        this.app.use(express.json({limit: '50mb'}));
+        this.app.use(express.urlencoded({ extended: true, limit: '50mb' }));
         this.app.use(logger("dev"));
+        this.app.use(cors())
     }
 
     routes() {

@@ -138,9 +138,31 @@ async function getProductByCategory(req, res) {
 
         const products = await getProductByCategoryModel(idCategory);
 
+        const productos = products.reduce((acc, row) => {
+            const { id_product, name, price, description, status, id_cty, url } = row;
+
+            // Buscamos si el producto ya está en el acumulador
+            let producto = acc.find(p => p.id_product === id_product);
+
+            // Si no existe, lo agregamos con un arreglo vacío de imágenes
+            if (!producto) {
+                producto = {
+                    id_product, name, price, description, status, id_cty, images: []
+                };
+                acc.push(producto); // Añadimos el producto al acumulador
+            }
+
+            // Si hay una imagen, la agregamos al producto
+            if (url) {
+                producto.images.push(url);
+            }
+
+            return acc;
+        }, []);
+
         res.status(200).json({
             success: true,
-            data: products,
+            data: productos,
         });
     } catch (error) {
         res.status(500).json({

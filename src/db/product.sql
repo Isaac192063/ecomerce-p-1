@@ -29,7 +29,6 @@ CREATE TABLE PRODUCTS(
     id_product SERIAL,
     name VARCHAR(130),
     price NUMERIC,
-    image VARCHAR(150),
     description VARCHAR(200),
     status BOOLEAN DEFAULT 'y',
     id_cty INTEGER,
@@ -39,6 +38,14 @@ CREATE TABLE PRODUCTS(
     CONSTRAINT CK_PRICE_PRODUCT CHECK (price > 0)
 );
 
+
+CREATE TABLE IMAGES(
+    id SERIAL, 
+    path VARCHAR(255),
+    id_pdo INTEGER,
+    CONSTRAINT PK_ID_IMAGES PRIMARY KEY(id),
+    CONSTRAINT FK_ID_PRODUCT FOREIGN KEY(id_pdo) REFERENCES PRODUCTS(id_product)
+);
 
 INSERT INTO CATEGORIES(id_category, name, description, status)
 VALUES 

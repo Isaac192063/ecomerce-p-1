@@ -35,11 +35,13 @@ async function registerUser(req, res) {
 }
 async function loginUser(req, res) {
     try {
-        const { username, email, password } = req.body;
+        const { identification, password } = req.body;
 
-        const userAuthenticate = await authenticationModel(email, username);
+        const userAuthenticate = await authenticationModel(identification);
 
         if (!userAuthenticate) {
+            console.log("no email");
+            
             return res.status(401).json({
                 success: false,
                 message: "Usuario no autenticado",
@@ -47,6 +49,8 @@ async function loginUser(req, res) {
         }
 
         if (!(await verfiedPassword(password, userAuthenticate.password))) {
+            console.log("no contrasña");
+            
             return res.status(401).json({
                 success: false,
                 message: "Usuario no autenticado",

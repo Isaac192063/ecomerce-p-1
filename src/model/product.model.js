@@ -1,6 +1,6 @@
 import PgConection from "../service/PgConection.service.js";
 
-export const getAllProductModel = async (limit, offset) => {
+export const getAllProductModelPagination = async (limit, offset) => {
     const pgp = new PgConection();
     return pgp.conection.query(
         `
@@ -18,14 +18,36 @@ export const getAllProductModel = async (limit, offset) => {
     );
 };
 
-export const getProductByIdModel = async (id) => {
+export const getAllProductModel = async () => {
     const pgp = new PgConection();
-    return pgp.conection.oneOrNone(
+    return pgp.conection.query(
         `
         SELECT 
-            *
+            P.*, I.path AS url, I.id_pdo AS id_image
         FROM
-            PRODUCTS
+            PRODUCTS P
+        FULL OUTER JOIN 
+            IMAGES I
+        ON 
+            P.id_product = I.id_pdo
+        ORDER BY 
+            id_product DESC
+        `,
+    );
+};
+
+export const getProductByIdModel = async (id) => {
+    const pgp = new PgConection();
+    return pgp.conection.manyOrNone(
+        `
+        SELECT 
+            P.*, I.path AS url, I.id_pdo AS id_image
+        FROM
+            PRODUCTS P
+        FULL OUTER JOIN 
+            IMAGES I
+        ON 
+            P.id_product = I.id_pdo
         WHERE
             id_product = $1
         `,
@@ -33,21 +55,19 @@ export const getProductByIdModel = async (id) => {
     );
 };
 
-export const saveProductModel = async (name, price, image, description, id_cty) => {
+export const saveProductModel = async (name, price,  description, id_cty) => {
     const pgp = new PgConection();
-    return pgp.conection.query(
+    return pgp.conection.oneOrNone(
         `
         INSERT INTO PRODUCTS(
             name, 
             price, 
-            image, 
             description,
             id_cty
             )
         VALUES(
             $[name],
             $[price],
-            $[image],
             $[description],
             $[id_cty]
             )
@@ -58,26 +78,42 @@ export const saveProductModel = async (name, price, image, description, id_cty) 
             name,
             price,
             description,
-            image,
             id_cty,
         }
     );
 };
 
-export const deleteProductModel = async (idProduct) => {
+export const saveImageDatabase = async(images, idProduct) =>{
+    console.log(images, idProduct);
+    const pg = new PgConection();
+    return pg.conection.oneOrNone(`
+        INSERT INTO
+            IMAGES
+                (Path,
+                id_pdo)
+        VALUES 
+            ($1,
+            $2)
+        RETURNING 
+            path;
+        `, [images, idProduct]);
+}
+
+export const deleteProductModel = async (idProduct, status) => {
     const pg = new PgConection();
 
-    return pg.conection.query(
+    return pg.conection.oneOrNone(
         `
-        DELETE
-        FROM
+       UPDATE
             PRODUCTS
-        WHERE
-            id_product = $1
+        SET
+            status = $[status]
+        WHERE 
+            id_product = $[idProduct]
         RETURNING 
             *
         `,
-        [idProduct]
+        {status, idProduct }
     );
 };
 
@@ -90,8 +126,7 @@ export const updateProductModel = async (name, description, price, idProduct, im
         SET
             name = $[name],
             description = $[description],
-            price = $[price],
-            image = $[image]
+            price = $[price]
         WHERE 
             id_product = $[idProduct]
         RETURNING 
@@ -101,7 +136,6 @@ export const updateProductModel = async (name, description, price, idProduct, im
             name,
             description,
             price,
-            image,
             idProduct,
         }
     );

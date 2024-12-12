@@ -1,21 +1,13 @@
 import { checkSchema } from "express-validator";
 
 export const authLoginValidator = checkSchema({
-    username: {
+    identification: {
         optional: true,
         trim: true,
         notEmpty: {
             negated: true,
         },
-    },
-    email: {
-        optional: true,
-        trim: true,
-        notEmpty: {
-            negated: true,
-        },
-        isEmail: true,
-        errorMessage: "Provea un email valido",
+        errorMessage: "Provea una identificacion valida",
     },
     password: {
         notEmpty: {

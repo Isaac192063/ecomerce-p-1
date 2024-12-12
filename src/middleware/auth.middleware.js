@@ -3,6 +3,14 @@ import environmentsConfig from "../config/environments.config.js";
 import { getUserByIdModel } from "../model/user.model.js";
 
 export const authMiddleware = (req, res, next) => {
+
+    if(req.method === 'GET' && req.url === '/product'){
+        return next();
+    }
+    if(req.method === 'GET' && req.url.includes('category')){
+        return next();
+    }
+
     const headerToken = req.header("Authorization");
 
     if (!headerToken || !headerToken.startsWith("Bearer ")) {

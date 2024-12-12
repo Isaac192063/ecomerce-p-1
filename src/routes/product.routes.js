@@ -9,6 +9,7 @@ import {
 import { hasRole } from "../middleware/hasRole.middleware.js";
 const productRouter = Router();
 
+productRouter.get("/product/pagination", productController.getAllProductPagination);
 productRouter.get("/product", productController.getAllProduct);
 
 productRouter.get(

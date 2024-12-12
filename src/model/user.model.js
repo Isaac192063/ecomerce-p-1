@@ -146,7 +146,7 @@ export const deleteUserModel = async (idUser) => {
     );
 };
 
-export const authenticationModel = async(email, username) =>{
+export const authenticationModel = async(identification) =>{
     const pg = new PgConection();
     return pg.conection.oneOrNone(`
     SELECT
@@ -155,6 +155,6 @@ export const authenticationModel = async(email, username) =>{
         USERS
     WHERE
         (email = $1
-        OR username = $2)
-    `, [email, username]);
+        OR username = $1)
+    `, [identification]);
 }

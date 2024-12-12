@@ -1,23 +1,20 @@
 import fs from "fs";
-import environment from '../config/environments.config.js'
+import environment from "../config/environments.config.js";
+import { v4 as uuidv4 } from 'uuid';
 
 export const saveImage = (image, prefix) => {
     try {
-        const mimeType = image.match(/^data:(image\/\w+);base64,/);
-        const extension = mimeType[1].split("/")[1];
-
-        const base64Data = image.replace(/^data:image\/\w+;base64,/, "");
-        const buffer = Buffer.from(base64Data, "base64");
-
-        const nameImage = `${prefix}_${Date.now()}.${extension}`;
-
-        fs.writeFile(`./src/public/img/${nameImage}`, buffer, (err) => {
-            if (err) {
-                console.log("Error al guardar la imagen");
+        if (prefix === "product") {
+            const images = [];
+            for (let i = 0; i < image.length; i++) {
+                const element = image[i];
+                images.push(configImage(element, prefix));
             }
-        });
+            return images;
+        }
 
-        return `http://${environment.HOST}:${environment.PORT}/img/${nameImage}`;
+        return configImage(image, prefix);
+
     } catch (error) {
         console.log(error);
         return "";
@@ -43,3 +40,21 @@ export const deleteImage = (image) => {
         });
     }
 };
+
+function configImage(image, prefix) {
+    const mimeType = image.match(/^data:(image\/\w+);base64,/);
+    const extension = mimeType[1].split("/")[1];
+
+    const base64Data = image.replace(/^data:image\/\w+;base64,/, "");
+    const buffer = Buffer.from(base64Data, "base64");
+
+    const nameImage = uuidv4();
+
+    fs.writeFile(`./src/public/img/${nameImage}`, buffer, (err) => {
+        if (err) {
+            console.log("Error al guardar la imagen");
+        }
+    });
+
+    return `http://${environment.HOST}:${environment.PORT}/img/${nameImage}`;
+}

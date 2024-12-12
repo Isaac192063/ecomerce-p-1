@@ -66,13 +66,17 @@ export const getProductByCategoryModel = async (idProduct) =>{
     const pg = new PgConection()
     return pg.conection.manyOrNone(`
         SELECT 
-            P.*
+             P.*, I.path AS url, I.id_pdo AS id_image
         FROM 
             PRODUCTS P
         LEFT JOIN 
             CATEGORIES C
         ON 
             C.id_category = P.id_cty
+        FULL OUTER JOIN 
+            IMAGES I
+        ON
+            P.id_product = I.id_pdo
         WHERE 
             P.id_cty = $1
     `, [idProduct]);
