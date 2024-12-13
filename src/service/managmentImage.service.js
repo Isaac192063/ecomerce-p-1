@@ -56,5 +56,5 @@ function configImage(image, prefix) {
         }
     });
 
-    return `http://${environment.HOST}:${environment.PORT}/img/${nameImage}`;
+    return `http://ecomerce-p-1.onrender.com/img/${nameImage}`;
 }
