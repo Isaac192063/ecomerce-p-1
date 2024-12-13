@@ -11,6 +11,7 @@ export default class PgConection {
         PgConection.instance = this;
         const pgp = pgPromise({});
         this.conection = pgp(environment.URL_DB);
+        console.log(environment.URL_DB);
         this.conection
             .connect()
             .then((obj) => {
@@ -18,6 +19,7 @@ export default class PgConection {
                 obj.done()
             })
             .catch((e) => {
+                console.log(e);
                 console.log("error",  e.message || e);
             });
     }

@@ -165,7 +165,7 @@ async function getProductByCategory(req, res) {
             data: productos,
         });
     } catch (error) {
-        res.status(500).json({
+        return res.status(500).json({
             success: false,
             message: "Error en el servidor",
         });
