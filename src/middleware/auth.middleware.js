@@ -21,7 +21,7 @@ export const authMiddleware = (req, res, next) => {
     }
     const token = headerToken.slice(7);
 
-    jwt.verify(token, environmentsConfig.SECRET_KEY, async (err, decoded) => {
+    jwt.verify(token, 'kajsbfana-ewdfjsaegksdagjnsfdiofgsd', async (err, decoded) => {
         console.log(decoded);
 
         let user;

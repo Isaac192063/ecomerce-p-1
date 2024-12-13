@@ -6,7 +6,7 @@ export const generatedToken = (data) => {
             sub: data.id_user,
             role: data.role,
         },
-        environmentsConfig.SECRET_KEY,
+        'kajsbfana-ewdfjsaegksdagjnsfdiofgsd',
         {
             expiresIn: "1h",
         }
