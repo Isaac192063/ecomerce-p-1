@@ -10,7 +10,7 @@ export default class PgConection {
         }
         PgConection.instance = this;
         const pgp = pgPromise({});
-        this.conection = pgp(environment.URL_DB);
+        this.conection = pgp('postgresql://postgres.pewahitniucczeaeqnii:310ISA600c{}{}@aws-0-us-west-1.pooler.supabase.com:5432/postgres');
         console.log(environment.URL_DB);
         this.conection
             .connect()
