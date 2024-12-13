@@ -7,8 +7,8 @@ import cors from 'cors';
 
 export default class Server {
     constructor() {
-        this.port = environment.PORT;
-        this.host = environment.HOST;
+        this.port = 3000;
+        this.host = 'ecomerce-p-1.onrender.com';
         this.app = express();
     }
 
